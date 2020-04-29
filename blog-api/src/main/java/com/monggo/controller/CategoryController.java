@@ -54,7 +54,7 @@ public class CategoryController {
      * @apiGroup category
      * @apiSuccessExample {json} 成功
      * {
-     * "msg": [
+     * "list": [
      * {
      * "cateId": 1,
      * "cateName": "123",
@@ -67,6 +67,6 @@ public class CategoryController {
      */
     @GetMapping("list")
     public R list() {
-        return R.ok().put("msg", categoryService.list());
+        return R.ok().put("list", categoryService.list());
     }
 }

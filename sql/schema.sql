@@ -47,10 +47,10 @@ create table t_article_tag (
 ) engine=InnoDB default charset=utf8 comment '博文标签表';
 
 create table t_file (
-	file_id int(11) not null comment '文件 ID',
+	file_id int(11) not null auto_increment comment '文件 ID',
 	path varchar(128) not null comment '真实文件路径',
 	img varchar(128) not null comment '网络路径',
-	`name` varchar(32) comment '文件名',
+	`name` varchar(128) comment '文件名',
 	quote int(6) comment '引用次数',
 	update_time timestamp comment 'hack mysql auto update timestamp',
 	create_time timestamp default now() comment '创建时间',

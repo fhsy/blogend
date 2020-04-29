@@ -20,8 +20,10 @@
             <version>1.0.0</version>
         </dependency>
 
+        <!-- 访问静态资源 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
     </dependencies>
-
-
-
 </project>

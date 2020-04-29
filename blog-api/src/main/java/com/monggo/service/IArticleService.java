@@ -16,8 +16,8 @@ public interface IArticleService extends IService<Article> {
 
     R add(Article article);
 
-    R search(String val,Integer type);
+    R list(String type);
 
-    R list(Integer type);
+    R indexList(Integer type, String val, Integer valType);
 
 }

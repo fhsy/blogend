@@ -1,11 +1,9 @@
 package com.monggo.controller;
 
 
-import com.monggo.common.type.ArticleType;
 import com.monggo.common.utils.R;
 import com.monggo.entity.Article;
 import com.monggo.service.IArticleService;
-import com.monggo.service.impl.ArticleServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,7 +44,6 @@ public class ArticleController {
      * "msg": "分类名已存在",
      * "code": 500
      * }
-     * <p>
      * {
      * "msg": "分类名为空",
      * "code": 500
@@ -56,7 +53,6 @@ public class ArticleController {
     public R add(Article article) {
         return articleService.add(article);
     }
-
     /**
      * @api {POST}  /article/save  保存博文
      * @apiGroup article
@@ -86,40 +82,10 @@ public class ArticleController {
         articleService.saveOrUpdate(article);
         return R.ok("保存成功");
     }
-
-    /**
-     * @api {GET}  /article/search  搜索博文
-     * @apiGroup article
-     * @apiSuccess {String} val 搜索内容  标题，博文内容
-     * @apiSuccess {int} type 搜索模式  默认查全部 1：标题 2 博文内容
-     * @apiSuccessExample {json} 成功
-     * {
-     * "msg": "success",
-     * "code": 0,
-     * "contextList": [
-     * {
-     * "articleId": 1,
-     * "title": "321",
-     * "context": "32111",
-     * "cateId": 1,
-     * "state": "RECOVERY",
-     * "updateTime": "2020-04-27 15:57:57",
-     * "createTime": "2020-04-27 14:28:40"
-     * }
-     * ],
-     * "titleList": null
-     * }
-     */
-    @GetMapping("/search")
-    public R search(String val, Integer type) {
-        return articleService.search(val, type);
-    }
-
-
     /**
      * @api {GET}  /article/list  列表
      * @apiGroup article
-     * @apiSuccess {int} type 模式  默认查发布和草稿 1： 发布 2： 删除 3：草稿
+     * @apiSuccess {int} type 模式  默认查发布和草稿 RELEASE： 发布 RECOVERY： 删除 DRAFT：草稿
      * @apiSuccessExample {json} 成功
      * "contextList": [
      * {
@@ -133,8 +99,25 @@ public class ArticleController {
      * }
      */
     @GetMapping("list")
-    public R list(Integer type){
+    public R list(String type){
         return articleService.list(type);
+    }
+
+
+
+
+    /**
+     * @api {GET}  /article/indexList  首页列表
+     * @apiGroup article
+     * @apiSuccess {int} type 模式 {1：时间排，2：标签，3：分类}
+     * @apiSuccess (可选参数) {int} val 搜索内容
+     * @apiSuccess (可选参数) {int} valType 搜索模式 {1：标题搜，2：内容搜}
+     * @apiSuccessExample {json} 成功
+     * "contextList": [
+     */
+    @GetMapping("index_list")
+    public R indexList(Integer type, String val, Integer valType){
+        return articleService.indexList(type, val, valType);
     }
 
 
