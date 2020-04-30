@@ -121,7 +121,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             queryWrapper.orderByDesc("create_time");
             list = this.list(queryWrapper);
         }
-        if (type != null && type.equals(ArticleParameterEnum.TAGS.getCode())){
+        if (type != null && type.equals(ArticleParameterEnum.TAGS.getCode())){ // 标签分类
             list = this.list(queryWrapper);
             Iterator iterator = list.iterator();
             List<Map> mapList = new ArrayList<>();
@@ -136,12 +136,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 ArticleTag articleTag = articleTagService.getOne(queryWrapper1);
                 if(articleTag == null){
                     Iterator<Map> iterator1 = mapList.iterator();
-
-
                 }
-
             }
-
 //            List<Tags> tagsList = tagsService.list();
 //            Iterator<Tags> iterator = tagsList.iterator();
 //            while (iterator.hasNext()){
