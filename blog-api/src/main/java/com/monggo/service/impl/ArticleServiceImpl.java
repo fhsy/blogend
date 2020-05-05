@@ -5,20 +5,16 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.monggo.common.type.ArticleParameterEnum;
 import com.monggo.common.type.ArticleType;
 import com.monggo.common.utils.R;
-import com.monggo.entity.Article;
-import com.monggo.entity.ArticleTag;
-import com.monggo.entity.Tags;
+import com.monggo.entity.*;
 import com.monggo.mapper.ArticleMapper;
 import com.monggo.service.IArticleService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.monggo.service.IArticleTagService;
 import com.monggo.service.ICategoryService;
 import com.monggo.service.ITagsService;
-import org.apache.ibatis.jdbc.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -91,61 +87,101 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         }
         return R.ok().put("list", list);
     }
-
     @Override
     public R indexList(Integer type, String val, Integer valType) {
-        List<Article> list = null;
-        QueryWrapper queryWrapper = new QueryWrapper();
-        // 只要发布状态下的博文
+        // type 判断数据类型哪种方式返回  1时间顺序  2标签  3分类
+        if(type == null || type != null && type.equals(ArticleParameterEnum.DATE.getCode())){
+            QueryWrapper queryWrapper = new QueryWrapper();
+            queryWrapper.orderByDesc("create_time");
+            this.isSeach(queryWrapper, val, valType);
+            List<Article> list = this.list(queryWrapper);
+            return R.ok().put("list", list);
+        }
+        if (type != null && type.equals(ArticleParameterEnum.TAGS.getCode())){ // 标签分类
+            List<IndexTagsArticle> indexArticleList = new ArrayList<>();
+            List<Tags> tagsList = tagsService.list(null);
+            // 遍历标签列表
+            for(Tags tags : tagsList){
+                Integer tagId = tags.getTagId();
+                //查询条件函数
+                QueryWrapper queryWrapper1 = new QueryWrapper();
+                queryWrapper1.eq("tag_id", tagId);
+                List<ArticleTag> articleTagList = articleTagService.list(queryWrapper1);
+                List<Article> articleList = new ArrayList<>();
+                // 遍历标签对应博文列表
+                for (ArticleTag articleTag : articleTagList){
+                    // 得到对应标签的博文id
+                    Integer articleId = articleTag.getArticleId();
+                    QueryWrapper queryWrapper = new QueryWrapper();
+                    queryWrapper.eq("article_id", articleId);
+                    this.isSeach(queryWrapper, val, valType);
+                    // 查询博文 添加到列表
+                    Article article = this.getOne(queryWrapper);
+                    if(article != null ){  // 存在不满足搜索条件
+                        articleList.add(article);
+                    }
+                }
+                // 创建实例 接收 标签和博文列表
+                IndexTagsArticle indexArticle = new IndexTagsArticle();
+                indexArticle.setTagId(tagId);
+                indexArticle.setTagName(tags.getTagName());
+                indexArticle.setArticleList(articleList);
+                indexArticleList.add(indexArticle);
+            }
+            return R.ok().put("list", indexArticleList);
+        }
+        if (type != null && type.equals(ArticleParameterEnum.CATEGORY.getCode())){ // 分类排
+            List<Category> categoryList = categoryService.list(null);
+            List<IndexCategoryArticle> indexArticleList = new ArrayList<>();
+            // 遍历分类列表
+            for(Category category : categoryList){
+                // 得到分类 ID
+                Integer cateId = category.getCateId();
+                QueryWrapper queryWrapper = new QueryWrapper();
+                // 搜索参数
+                queryWrapper.eq("cate_id", cateId);
+
+                this.isSeach(queryWrapper, val, valType);
+                List<Article> list1 = this.list(queryWrapper);
+
+                IndexCategoryArticle indexCategoryArticle = new IndexCategoryArticle();
+                indexCategoryArticle.setCateId(cateId);
+                indexCategoryArticle.setCateName(category.getCateName());
+                indexCategoryArticle.setArticleList(list1);
+                indexArticleList.add(indexCategoryArticle);
+            }
+            return R.ok().put("list", indexArticleList);
+        }
+        return R.error();
+    }
+
+
+    /**
+     * 内部方法 判断是否要搜索
+     * @param queryWrapper
+     * @param val
+     * @param valType
+     * @return
+     */
+    private QueryWrapper isSeach(QueryWrapper queryWrapper, String val, Integer valType){
+        // 查找发布状态下的
         queryWrapper.eq("state", ArticleType.RELEASE.getType());
         //是否搜索
         if(!StringUtils.isEmpty(val)){
             // 根据哪个字段搜
             if(valType != null && valType.equals(ArticleParameterEnum.TITLE.getCode())){
-                queryWrapper.eq("title", val);
+                queryWrapper.like("title", val);
             }
             if(valType != null && valType.equals(ArticleParameterEnum.CONTEXT.getCode())){
-                queryWrapper.eq("context", val);
+                queryWrapper.like("context", val);
             }
-            // 不传根据字段 就搜2种都要
+            // 不传搜索模式
             if(valType == null || valType != null &&
                     !valType.equals(ArticleParameterEnum.TITLE.getCode()) &&
                     !valType.equals(ArticleParameterEnum.CONTEXT.getCode())){
-                queryWrapper.eq("context", val);
-                queryWrapper.or();
-                queryWrapper.eq("title", val);
+                queryWrapper.like("title", val);
             }
         }
-        // type 判断数据类型哪种方式返回  1时间顺序  2标签  3分类
-        if(type != null && type.equals(ArticleParameterEnum.DATE.getCode())){
-            queryWrapper.orderByDesc("create_time");
-            list = this.list(queryWrapper);
-        }
-        if (type != null && type.equals(ArticleParameterEnum.TAGS.getCode())){ // 标签分类
-            list = this.list(queryWrapper);
-            Iterator iterator = list.iterator();
-            List<Map> mapList = new ArrayList<>();
-            HashMap hashMap = new HashMap();
-            hashMap.put("无", null);
-            mapList.add(hashMap);
-            while (iterator.hasNext()){
-                Article article = (Article) iterator.next();
-                Integer articleId = article.getArticleId();
-                QueryWrapper queryWrapper1 = new QueryWrapper();
-                queryWrapper1.like("article_id", article.getArticleId());
-                ArticleTag articleTag = articleTagService.getOne(queryWrapper1);
-                if(articleTag == null){
-                    Iterator<Map> iterator1 = mapList.iterator();
-                }
-            }
-//            List<Tags> tagsList = tagsService.list();
-//            Iterator<Tags> iterator = tagsList.iterator();
-//            while (iterator.hasNext()){
-//                Tags tags = iterator.next();
-//                queryWrapper.eq("")
-//                tags.getTagName();
-//            }
-        }
-        return R.ok();
+        return queryWrapper;
     }
 }

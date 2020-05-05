@@ -51,6 +51,7 @@ public class ArticleController {
      */
     @PostMapping("/add")
     public R add(Article article) {
+        article.setContext(" ");
         return articleService.add(article);
     }
     /**
@@ -107,7 +108,7 @@ public class ArticleController {
 
 
     /**
-     * @api {GET}  /article/indexList  首页列表
+     * @api {GET}  /article/index_list  首页列表
      * @apiGroup article
      * @apiSuccess {int} type 模式 {1：时间排，2：标签，3：分类}
      * @apiSuccess (可选参数) {int} val 搜索内容

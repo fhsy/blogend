@@ -4,6 +4,8 @@ import com.monggo.common.utils.R;
 import com.monggo.entity.ArticleTag;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  * 博文标签表 服务类
@@ -15,5 +17,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IArticleTagService extends IService<ArticleTag> {
 
 
-    R stick(ArticleTag articleTag);
+    R stick(Integer articleId, String tagIds);
 }

@@ -5,6 +5,8 @@ import com.monggo.entity.File;
 import com.monggo.mapper.FileMapper;
 import com.monggo.service.IFileService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,15 +26,34 @@ import java.util.Date;
 @Service
 public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IFileService {
 
+    @Value("${system.type}")
+    private String systemType;
+
+    @Value("${system.domain}")
+    private String systemDomain;
+
+    @Value("${system.file-load}")
+    private String systemfLoad;
+
+    @Value("${system.file-cate}")
+    private String systemfCate;
+
+    @Value("${system.file-save}")
+    private String systemfSave;
 
 
+    @Async
     @Override
     public R upload(MultipartFile picture) {
         // 获取文件地址  可存储到静态资源服务器
-        // String path = request.getSession().getServletContext().getRealPath("/img");
         // 获取项目位置
-        String path = System.getProperty("user.dir");
-        path += "\\blog-api\\src\\main\\resources\\static\\img";
+        String path = "";
+        if(systemType.equals("windows")){
+            path += System.getProperty("user.dir") + systemfSave;
+        }
+        if(systemType.equals("linux")){
+            path += systemfSave;
+        }
         java.io.File filePath = new java.io.File(path);
         System.out.println("文件的保存路径：" + path);
         if (!filePath.exists() && !filePath.isDirectory()) {
@@ -63,10 +84,10 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
             File file = new File();
             file.setName(fileName);
             file.setPath(path);
-            file.setImg("http://localhost:9091/blog-api/img/" + fileName);
+            file.setImg(systemDomain + "/" + systemfLoad + "/" + systemfCate + "/" +  fileName);
             this.save(file);
             //将文件在服务器的存储路径返回
-            return R.ok().put("url", "http://localhost:9091/blog-api/img/" + fileName);
+            return R.ok().put("url", systemDomain + "/" + systemfLoad + "/" + systemfCate + "/" +  fileName);
         } catch (IOException e) {
             System.out.println("上传失败");
             e.printStackTrace();

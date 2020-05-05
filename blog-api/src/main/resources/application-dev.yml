@@ -26,3 +26,16 @@ spring:
     view:
       prefix: /static/
       suffix: .html
+  freemarker:
+    prefer-file-system-access:
+  messages:
+    fallback-to-system-locale:
+
+
+# 配置系统类型
+system:
+  type: windows
+  domain: http://localhost:9091
+  file-load: blog-api
+  file-cate: img
+  file-save: \\blog-api\\src\\main\\resources\\static\\img

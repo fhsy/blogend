@@ -9,6 +9,9 @@ import com.monggo.service.IArticleTagService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * <p>
  * 博文标签表 服务实现类
@@ -22,19 +25,23 @@ public class ArticleTagServiceImpl extends ServiceImpl<ArticleTagMapper, Article
 
 
     @Override
-    public R stick(ArticleTag articleTag) {
-        if(articleTag != null && articleTag.getArticleId() == null || articleTag.getTagId() == null){
+    public R stick(Integer articleId, String tagIds) {
+        if(articleId == null && articleId == 0){
             return R.error("id为空");
         }
         QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("article_id", articleTag.getArticleId());
-        queryWrapper.eq("tag_id", articleTag.getTagId());
-        if(this.getOne(queryWrapper) != null){
-            this.remove(queryWrapper);
-            return R.ok("取消成功");
-        } else {
-            this.save(articleTag);
-            return R.ok("添加成功");
+        queryWrapper.eq("article_id", articleId);
+        // 删除其他标签
+        this.remove(queryWrapper);
+        if(!StringUtils.isEmpty(tagIds)){
+            String[] split = tagIds.split(",");
+            for (String tagId : split){
+                ArticleTag articleTag = new ArticleTag()
+                        .setArticleId(articleId)
+                        .setTagId(Integer.parseInt(tagId));
+                this.save(articleTag);
+            }
         }
+        return R.ok();
     }
 }
