@@ -69,4 +69,28 @@ public class CategoryController {
     public R list() {
         return R.ok().put("list", categoryService.list());
     }
+
+    /**
+     * @api {GET}  /category/class-count  分类统计
+     * @apiGroup index
+     * @apiSuccessExample {json} 成功
+     * {
+     * "msg": "success",
+     * "code": 0,
+     * "data": [
+     * {
+     * "cateName": "分类",
+     * "count": 2
+     * },
+     * {
+     * "cateName": "lll",
+     * "count": 1
+     * }
+     * ]
+     * }
+     */
+    @GetMapping("class-count")
+    public R classCount() {
+        return categoryService.classCount();
+    }
 }

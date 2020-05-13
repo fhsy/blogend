@@ -1,5 +1,6 @@
 package com.monggo.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
@@ -36,6 +38,12 @@ public class Category implements Serializable {
      * 类别名
      */
     private String cateName;
+
+    /**
+     * 个数
+     */
+    @TableField(exist = false)
+    private Integer count;
 
     /**
      * hack mysql auto update timestamp

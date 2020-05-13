@@ -57,7 +57,7 @@ public class TagsController {
      * @apiGroup tags
      * @apiSuccessExample {json} 成功
      * {
-     * "list": [
+     * "data": [
      * {
      * "tagId": 1,
      * "tagName": "asd",
@@ -73,7 +73,10 @@ public class TagsController {
      */
     @GetMapping("list")
     public R list() {
-        return R.ok().put("list", tagsService.list());
+        return R.ok().put("data", tagsService.list());
     }
+
+
+
 
 }

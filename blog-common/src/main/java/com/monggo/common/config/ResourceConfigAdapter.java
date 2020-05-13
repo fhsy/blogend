@@ -1,5 +1,6 @@
-package com.monggo.config;
+package com.monggo.common.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -14,10 +15,19 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @Configuration
 public class ResourceConfigAdapter extends WebMvcConfigurerAdapter {
 
+    @Value("${system.type}")
+    private String systemType;
+
+    @Value("${system.file-save}")
+    private String systemfSave;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         //获取文件的真实路径 work_project代表项目工程名 需要更改
-        String path = System.getProperty("user.dir")+"\\blog-api\\src\\main\\resources\\static\\img\\";
+        String path = System.getProperty("user.dir");
+        if(systemType.equals("windows")){
+            path += systemfSave;
+        }
         registry.addResourceHandler("/img/**").
                     addResourceLocations("file:"+path);
     }

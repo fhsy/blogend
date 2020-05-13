@@ -5,6 +5,7 @@ import com.monggo.common.utils.R;
 import com.monggo.entity.Article;
 import com.monggo.service.IArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -117,8 +118,8 @@ public class ArticleController {
      * "contextList": [
      */
     @GetMapping("index_list")
-    public R indexList(Integer type, String val, Integer valType){
-        return articleService.indexList(type, val, valType);
+    public R indexList(@DefaultValue("1") Integer page,@DefaultValue("8")  Integer size){
+        return articleService.indexList(page, size);
     }
 
 

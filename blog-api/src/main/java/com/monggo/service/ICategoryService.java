@@ -17,4 +17,6 @@ public interface ICategoryService extends IService<Category> {
 
     R add(String name);
 
+    R classCount();
+
 }
