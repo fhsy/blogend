@@ -42,8 +42,8 @@ public class ArticleTagController {
      * }
      */
     @PostMapping("/stick")
-    public R stick(Integer articleId, String tagIds) {
-        return articleTagService.stick(articleId, tagIds);
+    public R stick(Integer articleId, String tagNames) {
+        return articleTagService.stick(articleId, tagNames);
     }
 
 
@@ -75,7 +75,7 @@ public class ArticleTagController {
     public R getTagsByArticleId(Integer articleId) {
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("article_id", articleId);
-        return R.ok().put("list", articleTagService.list(queryWrapper));
+        return R.ok().put("data", articleTagService.list(queryWrapper));
     }
 
 }

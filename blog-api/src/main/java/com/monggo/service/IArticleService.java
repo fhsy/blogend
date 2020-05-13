@@ -18,6 +18,10 @@ public interface IArticleService extends IService<Article> {
 
     R list(String type);
 
-    R indexList(Integer page, Integer size);
+    R indexList(Integer page, Integer size, String searchValue
+            , Integer cateId
+            , Integer tagId);
+
+    R cate_save(Integer articleId, String  cateName);
 
 }

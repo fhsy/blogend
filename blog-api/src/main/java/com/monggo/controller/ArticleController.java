@@ -105,9 +105,6 @@ public class ArticleController {
         return articleService.list(type);
     }
 
-
-
-
     /**
      * @api {GET}  /article/index_list  首页列表
      * @apiGroup article
@@ -118,8 +115,16 @@ public class ArticleController {
      * "contextList": [
      */
     @GetMapping("index_list")
-    public R indexList(@DefaultValue("1") Integer page,@DefaultValue("8")  Integer size){
-        return articleService.indexList(page, size);
+    public R indexList(@DefaultValue("1") Integer page,@DefaultValue("8")  Integer size
+            ,String searchValue
+            ,Integer cateId
+            ,Integer tagId){
+        return articleService.indexList(page, size, searchValue, cateId, tagId);
+    }
+
+    @PostMapping("/cate_save")
+    public R cate_save(Integer articleId, String  cateName) {
+        return articleService.cate_save(articleId, cateName);
     }
 
 

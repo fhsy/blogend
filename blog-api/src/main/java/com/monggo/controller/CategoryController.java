@@ -67,7 +67,7 @@ public class CategoryController {
      */
     @GetMapping("list")
     public R list() {
-        return R.ok().put("list", categoryService.list());
+        return R.ok().put("data", categoryService.list());
     }
 
     /**

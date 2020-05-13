@@ -17,5 +17,5 @@ import java.util.List;
 public interface IArticleTagService extends IService<ArticleTag> {
 
 
-    R stick(Integer articleId, String tagIds);
+    R stick(Integer articleId, String tagNames);
 }
