@@ -159,4 +159,42 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         }
         return R.ok();
     }
+
+    @Override
+    public R get(Integer articleId) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("article_id", articleId);
+        Article item = this.getOne(queryWrapper);
+        IndexArticleVO indexArticleVO = new IndexArticleVO();
+        if(item == null){
+            return R.error().put("msg", "文章不存在");
+        }
+
+            List<String> stringList = new ArrayList<>();
+            QueryWrapper queryWrapper2 = new QueryWrapper();
+            queryWrapper2.eq("article_id", articleId);
+            List<ArticleTag> articleTagList = articleTagService.list(queryWrapper2);
+            for (ArticleTag item2 : articleTagList){
+                QueryWrapper queryWrapper3 = new QueryWrapper();
+                queryWrapper3.eq("tag_id", item2.getTagId());
+                Tags tags = tagsService.getOne(queryWrapper3);
+                stringList.add(tags.getTagName());
+            }
+            indexArticleVO.setArticleId(item.getArticleId());
+            indexArticleVO.setCateId(item.getCateId());
+            indexArticleVO.setCateName(item.getCateName());
+            indexArticleVO.setContext(item.getContext());
+            indexArticleVO.setCreateTime(item.getCreateTime());
+            indexArticleVO.setState(item.getState());
+            indexArticleVO.setTitle(item.getTitle());
+            indexArticleVO.setUpdateTime(item.getUpdateTime());
+            indexArticleVO.setTagNames(stringList);
+            if(item.getCateId() != null){
+                QueryWrapper queryWrapper3 = new QueryWrapper();
+                queryWrapper3.eq("cate_id", item.getCateId());
+                Category one = categoryService.getOne(queryWrapper3);
+                indexArticleVO.setCateName(one.getCateName());
+            }
+        return R.ok().put("data", indexArticleVO);
+    }
 }

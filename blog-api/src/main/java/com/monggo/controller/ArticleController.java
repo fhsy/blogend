@@ -130,9 +130,7 @@ public class ArticleController {
 
     @GetMapping("/get")
     public R get(Integer articleId){
-        QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("article_id", articleId);
-        return R.ok().put("data", articleService.getOne(queryWrapper));
+        return articleService.get(articleId);
     }
 
 

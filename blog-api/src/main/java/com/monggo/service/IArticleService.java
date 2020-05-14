@@ -24,4 +24,6 @@ public interface IArticleService extends IService<Article> {
 
     R cate_save(Integer articleId, String  cateName);
 
+    R get(Integer articleId);
+
 }
