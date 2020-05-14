@@ -1,4 +1,4 @@
-package com.monggo.common.config;
+package com.monggo.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +26,7 @@ public class ResourceConfigAdapter extends WebMvcConfigurerAdapter {
         //获取文件的真实路径 work_project代表项目工程名 需要更改
         String path = System.getProperty("user.dir");
         if(systemType.equals("windows")){
-            path += systemfSave;
+            path += "\\blog-api\\src\\main\\resources\\static\\img\\";
         }
         registry.addResourceHandler("/img/**").
                     addResourceLocations("file:"+path);

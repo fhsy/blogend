@@ -30,8 +30,6 @@ spring:
     prefer-file-system-access:
   messages:
     fallback-to-system-locale:
-
-
 # 配置系统类型
 system:
   type: windows

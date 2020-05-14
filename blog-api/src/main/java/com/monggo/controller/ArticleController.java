@@ -1,6 +1,7 @@
 package com.monggo.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.monggo.common.utils.R;
 import com.monggo.entity.Article;
 import com.monggo.service.IArticleService;
@@ -125,6 +126,13 @@ public class ArticleController {
     @PostMapping("/cate_save")
     public R cate_save(Integer articleId, String  cateName) {
         return articleService.cate_save(articleId, cateName);
+    }
+
+    @GetMapping("/get")
+    public R get(Integer articleId){
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("article_id", articleId);
+        return R.ok().put("data", articleService.getOne(queryWrapper));
     }
 
 
