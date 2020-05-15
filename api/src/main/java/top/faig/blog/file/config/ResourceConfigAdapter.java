@@ -18,9 +18,6 @@ public class ResourceConfigAdapter extends WebMvcConfigurerAdapter {
     @Value("${system.type}")
     private String systemType;
 
-    @Value("${system.file-save}")
-    private String systemfSave;
-
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         //获取文件的真实路径 work_project代表项目工程名 需要更改
