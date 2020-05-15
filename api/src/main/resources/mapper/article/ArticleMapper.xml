@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.faig.blog.article.mapper.ArticleMapper">
+    <resultMap id="getIndexArticlePageMap" type="top.faig.blog.article.entity.IndexArticleVO">
+        <id property="articleId" column="article_id"/>
+        <result property="title" column="title"/>
+        <result property="context" column="context"/>
+        <result property="cateName" column="cate_name"/>
+        <result property="cateId" column="cate_id"/>
+        <result property="state" column="state"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createTime" column="create_time"/>
+        <collection property="tagNames" ofType="string">
+            <result property="tagName" column="tag_name"/>
+        </collection>
+    </resultMap>
+
+    <select id="getIndexArticlePage" resultMap="getIndexArticlePageMap">
+        select ta.*,tc.cate_name,tt.tag_name from t_article ta
+        LEFT JOIN t_category tc on ta.cate_id = tc.cate_id
+        LEFT JOIN t_article_tag tat on ta.article_id = tat.article_id
+        LEFT JOIN t_tags tt on tat.tag_id = tt.tag_id
+        WHERE ta.state = 'RELEASE'
+        <if test="searchValue != null and searchValue != ''">
+            AND ta.title LIKE '%${searchValue}%'
+        </if>
+        <if test="cateId != null and cateId != '' and cateId != 0">
+            AND ta.cate_id = #{cateId}
+        </if>
+        <if test="tagId != null and tagId != '' and tagId != 0">
+            AND tat.tag_id = #{tagId}
+        </if>
+        order by ta.create_time
+
+
+    </select>
+</mapper>

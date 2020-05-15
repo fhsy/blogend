@@ -10,13 +10,16 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>com.monggo</groupId>
+    <groupId>top.faig</groupId>
     <artifactId>blogend</artifactId>
-    <version>1.0.0</version>
+    <version>0.1.0</version>
     <packaging>pom</packaging>
+
+
     <modules>
-        <module>blog-api</module>
-        <module>blog-common</module>
+        <module>common</module>
+        <module>api</module>
+        <module>system</module>
     </modules>
 
     <properties>
