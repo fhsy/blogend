@@ -44,7 +44,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.2.6.RELEASE</version>
                 <configuration>
-                    <mainClass>com.monggo.ApiApplication</mainClass>
+                    <mainClass>top.faig.blog.ApiApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

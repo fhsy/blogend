@@ -4,11 +4,8 @@ package top.faig.blog.article.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.bind.DefaultValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RestController;
 import top.faig.blog.article.entity.Article;
 import top.faig.blog.article.service.IArticleService;
 import top.faig.blog.common.utils.R;
@@ -123,13 +120,24 @@ public class ArticleController {
         return articleService.indexList(page, size, searchValue, cateId, tagId);
     }
 
+    /**
+     * @api {POST}  /article/cate_save  博文分类选择
+     * @apiGroup article
+     * @apiSuccess {int} articleId 博文ID
+     * @apiSuccess {String} cateName 分类名
+     * @apiSuccessExample {json} 成功
+     * {
+     * 	"msg": "success",
+     * 	"code": 0
+     * }
+     */
     @PostMapping("/cate_save")
     public R cate_save(Integer articleId, String  cateName) {
         return articleService.cate_save(articleId, cateName);
     }
 
-    @GetMapping("/get")
-    public R get(Integer articleId){
+    @GetMapping("/get/{articleId}")
+    public R get(@PathVariable Integer articleId){
         return articleService.get(articleId);
     }
 
