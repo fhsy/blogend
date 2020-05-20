@@ -89,6 +89,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> {
 
 
     public R get(Integer articleId) {
-        return R.ok().put("data", articleMapper.selectById(articleId));
+        return R.ok().put("data", articleMapper.getById(articleId));
     }
 }

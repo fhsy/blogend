@@ -40,7 +40,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
      *
      * @return
      */
-    ArticleVO selectById(Integer articleId);
+    ArticleVO getById(Integer articleId);
 
 
 

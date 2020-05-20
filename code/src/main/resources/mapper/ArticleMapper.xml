@@ -55,7 +55,7 @@
         order by ta.create_time desc
     </select>
 
-    <select id="selectById" resultMap="getIndexArticlePageMap">
+    <select id="getById" resultMap="getIndexArticlePageMap">
         select ta.*,tc.cate_name from t_article ta
         LEFT JOIN t_category tc on ta.cate_id = tc.cate_id
         WHERE ta.state = 'RELEASE'

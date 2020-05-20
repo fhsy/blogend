@@ -49,9 +49,6 @@ public class Article implements Serializable {
      */
     private Integer cateId;
 
-    //@TableField(exist = false)
-    //private String cateName;
-
     /**
      * 状态
      */
