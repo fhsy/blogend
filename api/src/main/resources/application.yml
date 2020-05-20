@@ -18,11 +18,39 @@ spring:
       max-file-size: 100MB
       max-request-size: 100MB
       enabled: true
+  mvc:
+    view:
+      prefix: /static/
+      suffix: .html
+    freemarker:
+      prefer-file-system-access:
+    messages:
+      fallback-to-system-locale:
+  #spring和druid连接池配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    #   配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+    filters: stat,wall
+    maxPoolPreparedStatementPerConnectionSize: 20
+    useGlobalDataSourceStat: true
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
 #mybatis
 mybatis-plus:
-  mapper-locations: classpath*:/mapper/*/*.xml
+  mapper-locations: classpath*:/mapper/*.xml
   #实体扫描，多个package用逗号或者分号分隔
-  typeAliasesPackage: top.faig.blog.*.entity
+  type-aliases-package: top.faig.blog.code.entity
   global-config:
     #数据库相关配置
     db-config:
@@ -41,6 +69,7 @@ mybatis-plus:
     cache-enabled: false
     call-setters-on-nulls: true
     jdbc-type-for-null: 'null'
+
 
 
 
