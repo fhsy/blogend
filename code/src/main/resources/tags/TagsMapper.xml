@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.faig.blog.code.tags.mapper.TagsMapper">
+
+    <select id="selectListByArticleId" parameterType="int" resultType="top.faig.blog.code.tags.entity.Tags">
+        select tt.* from
+        t_tags tt left join t_article_tag tat on tt.tag_id = tat.tag_id
+        left join t_article ta on tat.article_id = ta.article_id
+        where ta.article_id = #{article_id}
+    </select>
+</mapper>

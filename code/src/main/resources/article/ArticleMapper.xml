@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.faig.blog.code.article.mapper.ArticleMapper">
+
+    <resultMap id="getIndexArticlePageMap" type="top.faig.blog.code.article.vo.ArticleVO">
+        <id property="articleId" column="article_id"/>
+        <result property="title" column="title"/>
+        <result property="context" column="context"/>
+        <result property="cateName" column="cate_name"/>
+        <result property="state" column="state"/>
+        <result property="cateId" column="cate_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <collection property="tags" ofType="top.faig.blog.code.tags.entity.Tags"
+                    column="article_id" select="top.faig.blog.code.tags.mapper.TagsMapper.selectListByArticleId">
+        </collection>
+    </resultMap>
+
+    <select id="selectPageVo" resultMap="getIndexArticlePageMap">
+        select ta.*,tc.cate_name from t_article ta
+        LEFT JOIN t_category tc on ta.cate_id = tc.cate_id
+        WHERE ta.state = 'RELEASE'
+        <if test="searchValue != null and searchValue != ''">
+            AND ta.title LIKE '%${searchValue}%'
+        </if>
+        <if test="cateId != null and cateId != '' and cateId != 0">
+            AND ta.cate_id = #{cateId}
+        </if>
+        <if test="tagId != null and tagId != '' and tagId != 0">
+            AND ta.article_id in (
+                select tat.article_id
+                from t_article_tag tat left join t_tags tt on tt.tag_id = tat.tag_id
+                where tt.tag_id = #{tagId})
+        </if>
+        order by ta.create_time desc
+    </select>
+
+    <select id="selectAll" parameterType="string" resultMap="getIndexArticlePageMap">
+        select ta.*,tc.cate_name from t_article ta
+        LEFT JOIN t_category tc on ta.cate_id = tc.cate_id
+        <where>
+            <choose>
+                <when test="state == 'RD'">
+                    and ta.state in ('RELEASE','DRAFT')
+                </when>
+                <when test="state != '' and state != null">
+                    and ta.state = #{state}
+                </when>
+
+                <otherwise>
+                    and ta.state = 'RELEASE'
+                </otherwise>
+            </choose>
+        </where>
+        order by ta.create_time desc
+    </select>
+
+    <select id="getById" resultMap="getIndexArticlePageMap">
+        select ta.*,tc.cate_name from t_article ta
+        LEFT JOIN t_category tc on ta.cate_id = tc.cate_id
+        WHERE ta.state = 'RELEASE'
+        and ta.article_id = #{articleId}
+    </select>
+
+
+
+</mapper>
