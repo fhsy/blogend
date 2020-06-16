@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #忽略所有 .svn 目录
 .svn/
 #忽略所有 target 目录
@@ -9,7 +8,6 @@
 *.iml
 # 忽略所有 .log 文件
 *.log
-=======
 # Compiled class file
 *.class
 
